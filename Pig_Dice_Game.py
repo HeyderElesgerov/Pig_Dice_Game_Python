@@ -1,88 +1,42 @@
 import random
-import time
 
-class Player():
-    def __init__(self, Dice):
-        self.Dice = Dice
+def roll_die ():
+    r = random.randrange(1, 6)
+    return r
+
+def take_turn(player):
+    point=0
+    keep_rolling=1
+    print ("\tits your turn player-->", player)
+    input( "press enter to begin")
+    while keep_rolling==1:
+        r = roll_die()
+        print("\n\tyou got a", r)
+        if r == 1:
+            point=0
+            keep_rolling=0
+        else:
+            point += r
+            print(" your total point is", point)
+            if player=="You":
+            	y= input("do you want to continue? y=yes n=no>>>")
+            if player=="Computer":
+            	tuple=("y","n")
+            	y=random.choice(tuple)
+            	print("do you want to continue? y=yes n=no>>>",y)
+            if y== "y":
+                keep_rolling= 1
+            else:
+                keep_rolling= 0
+    print("\t",player,"'s turn is over")
+    return point
     
-    def play(self):
-        TurnPoint = 0
-        while True:
-            Dice = random.randint(1,6)
-            print('It\'s', Dice)
-            if Dice == 1:
-                print('It\'s 1. You lost your points!')
-                return 0
-            else:
-                TurnPoint += Dice
-                print('It\'s', Dice, 'This turn\'s point is', TurnPoint, 'Roll again?(y)')
-            c = input()
-            if c == 'y' or c == 'Y':
-                print('Rolling again!')
-                continue
-            else:
-                return TurnPoint
-    
-    def rollagain(self):
-        poss = random.randint(0,1)
-        return poss
-
-print('~~~Welcome to \'Pig\' game! To begin playing, input 1. \nTo see the rules, input 2.')
-while True:
-    a = input()
-    if a == '1':
-        print('Game is beginning!')
-        Computer = Player(0)
-        Opponent = Player(0)
-        Comp_Point = 0
-        Opp_Point = 0
-        while True:
-            print('Rolling the Dice to choose who starts the game!')
-            time.sleep(1)
-            Comp_begin_dice = random.randint(1, 6)
-            Opp_begin_dice = random.randint(1, 6)
-            if Comp_begin_dice > Opp_begin_dice:
-                #Computer begins and plays
-                print('Computer Begins! Computer dice : Your dice', Comp_begin_dice, Opp_begin_dice)
-                a = 0
-                print('Computer is rolling the dice!')
-                while Comp_Point < 100 and Opp_Point < 100:
-                    time.sleep(1)
-                    if a%2 == 0:
-                        Computer.play()
-                        a += 1
-                        continue
-                    if a%2 == 1:
-                        Opponent.play()
-                        a += 1
-                        continue
-                if Comp_Point > Opp_Point:
-                    print('Computer won! Computer\'s Points:', Comp_Point)
-                else:
-                    print('You won! Your Points:', Opp_Point)
-            elif Comp_begin_dice == Opp_begin_dice:
-                #Draw
-                print('Draw, both are:', Comp_begin_dice)
-                print('Rolling again!')
-                continue
-            else:
-                #You begin and play
-                print('You begin! Computer dice : Your dice', Comp_begin_dice, Opp_begin_dice)
-                while Comp_Point < 100 and Opp_Point < 100:
-                    print('You are rolling the dice!')
-                    Opponent.play()
-                if Comp_Point > Opp_Point:
-                    print('Computer won! Computer\'s Points:', Comp_Point)
-                else:
-                    print('You won! Your Points:', Opp_Point)
-
-    elif a == '2':
-        print("""
+def show_instructions():
+	print("""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             ---Rules---
     Number of players: 1 (You versus Computer)
     Number of dice: 1
-
     1) Decide who will start by having each player roll a dice – the one with the highest score starts the game.
     2) A player’s turn starts by rolling only one dice. The player continues to roll the dice again, as long as he does not roll a 1 or decides to add his points to his overall score.
     Each time the player rolls the dice, the following options exist:
@@ -93,7 +47,35 @@ while True:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
 """)
-        continue
+def main():
+    show_instructions()
+    p1 = 0
+    p2 = 0
+    players=(input("Your name>>>"),"Computer")
+    a=random.choice(players)
+    if a=="You":
+    	b="Computer"
     else:
-        print('Input 1 or 2 only!')
-        continue
+    	b="You"
+    while p1<100 and p2<100:
+        r = take_turn(a)
+        p1 += r
+        print("Player",a,"'s points are:" +str(p1))
+        print ("Player",b,"'s points are:" +str(p2))
+        r = take_turn(b)
+        p2 += r
+        print (" The game is over")
+        print (" Player",a,"'s points are:" +str(p1))
+        print (" Player",b,"'s points are:" +str(p2))
+    if p1>p2:
+        print("You are the winner-->",a)
+    elif p2>p1:
+        print ("Computer is the winner-->",b)
+    else:
+        print(" Tie game")
+       
+        
+main()
+take_turn("You")
+take_turn("Computer")
+
